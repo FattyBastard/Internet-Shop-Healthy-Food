@@ -399,8 +399,8 @@ window.addEventListener('DOMContentLoaded', () => {
         elements.forEach(elem => {
             elem.addEventListener('click', (event) => {
 
-                if (event.target.getAttribute('data-ratio')){
-                    ratio += event.target.getAttribute('data-ratio');
+                if (event.target.getAttribute('ratio-data')){
+                    ratio = +event.target.getAttribute('ratio-data');
                 }
                 else{
                     sex = event.target.getAttribute("id");
