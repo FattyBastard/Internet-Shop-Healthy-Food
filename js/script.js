@@ -364,7 +364,62 @@ window.addEventListener('DOMContentLoaded', () => {
     //     plusSlides(1);
     // });
     
-   
+    // calculater
+
+    const result = document.querySelector(".calculating_result");
+
+    let sex = "female", 
+               height, weight, age, 
+               ratio = 1.375;
+
+    function calculate(){
+
+        if (!sex || !height || !weight || !age || !ratio){
+            result.textContent = "_______";
+            return;
+
+        }
+
+        if (sex === 'female'){
+            result.textContent = (447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio;
+        }else{
+            result.textContent = (88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio;
+        }
+    }
+
+    function getStaticInformation(parentSelector, activeClass){
+
+        const elements = document.querySelectorAll(`${parentSelector} div`);
+
+        elements.forEach(elem => {
+            elem.addEventListener('click', (event) => {
+
+                if (event.target.getAttribute('data-ratio')){
+                    ratio += event.target.getAttribute('data-ratio');
+                }
+                else{
+                    sex = event.target.getAttribute("id");
+                }
+    
+                elements.forEach((elem) => {
+                    elem.classList.remove(activeClass);
+                });
+    
+                event.target.classList.add(activeClass);
+                calculate();
+            });
+        });
+    }
+
+
+    getStaticInformation("#gender", "calculating__choose-item_active");
+    getStaticInformation(".calculating__choose_big", "calculating__choose-item_active");
+    // function getDynamicInformation()
+
+
+
+
+
     
     
 
