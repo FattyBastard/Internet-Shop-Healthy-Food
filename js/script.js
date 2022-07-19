@@ -210,6 +210,9 @@ window.addEventListener('DOMContentLoaded', () => {
         "small"
     ).render();
 
+
+    // sending form
+
     const message = {
         loading: 'Загрузка',
         success: 'Спасибо! Скоро мы сами свяжемся',
@@ -218,10 +221,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const forms = document.querySelectorAll('form');
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form){
+    async function postData(url, data){
+
+        const result = await fetch(url, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: data,
+            });
+  
+        return await result.json();
+    }
+
+    function bindPostData(form){
+
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -230,43 +245,23 @@ window.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = message.loading;
             form.append(statusMessage);
 
-            // const request = new XMLHttpRequest();
-            // request.open('POST', 'server.php');
-            // request.setRequestHeader('Content-type', 'multipart/form-data');
 
             const formData = new FormData(form); // для formData в верстке всегда должны быть указаны атрибуты name
-            
-            // const object = {};
-            // formData.forEach((value, key)=>{
-            //     object[key] = value;
-            // });
 
-            fetch('server.php', {
-                method: "POST",
-                body: formData,
-                // headers: {
-                //     "content-type": "application/json"
-                // }
-            })
-            .then(data => console.log(data.text()));
-            
-            // request.send(formData);
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            // request.addEventListener('load', () => {
-            //     if (request.status === 200){
-            //         statusMessage.textContent = message.success;
-            //         console.log(request.response);
-            //     }
-            //     else{
-            //         statusMessage.textContent = message.failure;
-            //     }
-            //     form.reset();
-            //     setTimeout(()=>{
-            //         statusMessage.remove();
-            //     }, 5000);
-        //     });
+            postData('http://localhost:3000/requests', json)
+                .then(data => {console.log(data);
+                                statusMessage.remove();
+                
+                });
         });
+               
     }
+    
+
+
+    // slider
 
     const Slides = document.querySelectorAll(".offer__slide");
     const NextSlider = document.querySelector(".offer__slider-next");
@@ -410,7 +405,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     elem.classList.remove(activeClass);
                 });
     
-                event.target.classList.add(activeClass);
+                event.target.classList.add(activeClass); 
                 calculate();
             });
         });
