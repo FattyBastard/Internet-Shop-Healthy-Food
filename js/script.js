@@ -40,7 +40,6 @@ window.addEventListener('DOMContentLoaded', () => {
                                         <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
                                     </div>`;
 
-            console.log(this.parent);
             this.parent.append(element);
         }
     }
@@ -82,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
-    const deadLine = '2022-04-27';
+    const deadLine = '2022-08-01';
 
     function getTimeRemaining(endtime){
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -179,36 +178,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setClock('.timer', deadLine);
 
-    new MenuItem(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        ".menu .container"
-    ).render();
+    // get data from json.db and place it on page
 
-    new MenuItem(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню "Премиум"',
-        'В меню "Премиум" мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        15,
-        ".menu .container",
-        "menu__item",
-        "big"
-    ).render();
+    async function getDataToCards(url){
 
-    new MenuItem(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        12,
-        ".menu .container",
-        "menu__item",
-        "small"
-    ).render();
+        const result = await fetch(url);
+
+        if (!result.ok){
+            alert(new Error(`"Coudn't fetch ${url}!`));
+        }
+
+        return await result.json();
+    }
+
+
+    getDataToCards("http://localhost:3000/cards")
+        .then(data => {
+        data.forEach(({img, altimg, title, descr, price}) => {       
+            new MenuItem(img, altimg, title, descr, price, ".menu .container").render();
+        });
+    });
 
 
     // sending form
@@ -368,8 +357,6 @@ window.addEventListener('DOMContentLoaded', () => {
                ratio = 1.375;
 
     function calculate(){
-
-        console.log(sex, height, weight, age, ratio);
 
         if (!sex || !height || !weight || !age || !ratio){
             result.textContent = '_____';
