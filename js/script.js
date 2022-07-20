@@ -372,7 +372,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });       
             event.target.classList.add("active-dot");  
 
-            SlideIndex = event.target.getAttribute("slide-index");
+            SlideIndex = +event.target.getAttribute("slide-index");
             offset = +(width.slice(0, width.length - 2) * (SlideIndex - 1));
 
             offerSliderField.style.transform = `TranslateX(${-offset}px)`;
